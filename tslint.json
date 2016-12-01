@@ -2,6 +2,8 @@
   "extends": "tslint:latest",
   "rules": {
     "interface-name": false,
+    "no-namespace": false,
+    "no-trailing-whitespace": false,
     "max-classes-per-file": false,
     "max-line-length": [true, 140],
     "member-ordering": [true,
@@ -9,7 +11,6 @@
       "static-before-instance",
       "variables-before-functions"
     ],
-    "no-unused-variable": false,
     "variable-name": [true,
       "ban-keywords",
       "check-format",
