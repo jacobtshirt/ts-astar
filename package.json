@@ -4,7 +4,7 @@
   "description": "A* Pathpathing with Typescript",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "karma start karma.conf.js --single-run"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/jacobtshirt/ts-astar/issues"
   },
-  "homepage": "https://github.com/jacobtshirt/ts-astar#readme"
+  "homepage": "https://github.com/jacobtshirt/ts-astar#readme",
+  "devDependencies": {
+    "karma-typescript": "2.1.4"
+  }
 }
