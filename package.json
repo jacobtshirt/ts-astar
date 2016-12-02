@@ -1,0 +1,19 @@
+{
+  "name": "ts-astar",
+  "version": "1.0.0",
+  "description": "A* Pathpathing with Typescript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jacobtshirt/ts-astar.git"
+  },
+  "author": "Jacob Tschirhart",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jacobtshirt/ts-astar/issues"
+  },
+  "homepage": "https://github.com/jacobtshirt/ts-astar#readme"
+}
