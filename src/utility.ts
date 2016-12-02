@@ -8,7 +8,7 @@ function getEuclideanNeighbors() {
 function getDiagonalNeighbors(grid: Map<Node, string>, x: number, y: number): Set<Node> {
     const width: number = Config.width();
     const height: number = Config.height();
-    let neighbors: Set<Node> = new Set<Node>(getManhattanNeighbors());
+    let neighbors: Set<Node> = new Set<Node>(getManhattanNeighbors(grid, x, y));
 
     // Check northwest neighbor
     if (x - 1 >= 0 && y + 1 < height) {
@@ -114,6 +114,11 @@ function distanceBetween(current: Node, neighbor: Node){
 
     distance = Math.sqrt(diffXSquared + diffYSquared);
     return distance;
+}
+
+function getManhattanHeuristic(curr: Node, neighbor: Node) {
+    const dx = Math.abs(curr.x - neighbor.x);
+
 }
 
 function canMoveToNode(grid: Map<Node, string>, nodeToCheck: Node) {

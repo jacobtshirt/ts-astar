@@ -15,7 +15,7 @@ export namespace Config {
      * @returns {string}
      */
     export function navigation(newNavigation?: string): string {
-        if (newWidth) {
+        if (newNavigation) {
             _navigation = newNavigation;
         }
         return _navigation;
@@ -50,8 +50,8 @@ export namespace Config {
      * @param newObstacleChar
      * @returns {string}
      */
-    export function obstacleChar(newObstacleChar?: number): number {
-        if (newHeight) {
+    export function obstacleChar(newObstacleChar?: string): string {
+        if (newObstacleChar) {
             _obstacleChar = newObstacleChar;
         }
         return _obstacleChar;
@@ -64,7 +64,7 @@ export namespace Config {
      */
     export function startNode(newStartNode?: Node): Node {
         if (newStartNode) {
-            _startNode = newObstacleChar;
+            _startNode = newStartNode;
         }
         return _startNode;
     }
