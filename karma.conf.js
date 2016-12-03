@@ -1,86 +1,45 @@
-// Karma configuration
-// Generated on Fri Dec 02 2016 07:46:52 GMT-0600 (CST)
-
 module.exports = function(config) {
-  config.set({
+    config.set({
 
-    // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: '',
+        frameworks: ["jasmine", "karma-typescript"],
 
+        files: [
+            { pattern: "src/**/*.ts" }
+        ],
 
-    // frameworks to use
-    // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jasmine', 'karma-typescript'],
-
-
-    // list of files / patterns to load in the browser
-    files: [
-      { pattern: "src/**/*.spec.ts" }
-    ],
-
-
-    // list of files to exclude
-    exclude: [
-    ],
-
-
-    // preprocess matching files before serving them to the browser
-    // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-    preprocessors: {
-       "src/**/*.ts": ["karma-typescript"]
-    },
-
-
-    // test results reporter to use
-    // possible values: 'dots', 'progress'
-    // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress', 'karma-typescript'],
-
-    karmaTypescriptConfig: {
-        tsconfig: './tsconfig.json',
-        reports:
-        {
-            "html": "coverage",
-            "teamcity": "coverage",
+        preprocessors: {
+            "**/*.ts": ["karma-typescript"]
         },
-        remapOptions:
-        {
-            // Regex or string for excluding files, the example below is default
-            exclude: /(typings|Interfaces|Libs)/,
-            // Function for warning messages, these warnings are silent by default
-            warn: function (message) { }
-        }
-    },
 
+        reporters: ["progress", "karma-typescript"],
 
-    // web server port
-    port: 9876,
+        // Uncomment below if you want the default html
+        // coverage report + a summary on the console
+        
+        karmaTypescriptConfig: {
+            reports:
+            {
+                "html": "coverage",
+                "text-summary": "" // destination "" will redirect output to the console
+            },
+            compilerOptions: {
+              emitDecoratorMetadata: true,
+              experimentalDecorators: true,
+              module: "commonjs",
+              sourceMap: true,
+              target: "ES6"
+          }
+        },
+        
 
+        // Uncomment below if you want to disable code coverage
+        // instrumentation during debugging of tests
+        /*
+        karmaTypescriptConfig: {
+            disableCodeCoverageInstrumentation: true
+        },
+        //*/
 
-    // enable / disable colors in the output (reporters and logs)
-    colors: true,
-
-
-    // level of logging
-    // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-    logLevel: config.LOG_INFO,
-
-
-    // enable / disable watching file and executing tests whenever any file changes
-    autoWatch: false,
-
-
-    // start these browsers
-    // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: [],
-
-
-    // Continuous Integration mode
-    // if true, Karma captures browsers, runs the tests and exits
-    singleRun: false,
-
-    // Concurrency level
-    // how many browser should be started simultaneous
-    concurrency: 1
-  })
-}
+        browsers: ["Chrome"]
+    });
+};
