@@ -1,3 +1,6 @@
+addons:
+  firefox: "48.0"
+
 language: node_js
 node_js:
   - "7.0.0"
