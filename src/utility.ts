@@ -1,8 +1,19 @@
 import { Config } from "./config";
+import { EdgeList } from "./custom-types";
+import { Edge } from "./edge";
 import { Node } from "./node";
+import { OrderedMap } from 'immutable';
 
-export function getEuclideanNeighbors() {
-    return 0;
+
+
+export function getEuclideanNeighbors<T extends Node>(edgeList: EdgeList<T>, curr: T) {
+    let neighbors: OrderedMap<number,T|Node> = OrderedMap<number,T|Node>();
+    for (let edge of edgeList) { 
+        if(isSameNode(curr, edge.from)) {
+             neighbors = neighbors.set(edge.weight, edge.to);
+        }
+    }
+    return neighbors;
 }
 
 export function getDiagonalNeighbors<T extends Node, V>(grid: Map<T, V>, x: number, y: number): Set<T|Node> {

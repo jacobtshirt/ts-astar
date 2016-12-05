@@ -29,5 +29,9 @@
     "remap-istanbul": "0.7.0",
     "source-map": "0.5.6",
     "typescript": "2.0.10"
+  },
+  "dependencies": {
+    "@types/immutable": "3.8.6",
+    "immutable": "3.8.1"
   }
 }
