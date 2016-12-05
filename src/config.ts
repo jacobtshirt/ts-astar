@@ -4,7 +4,7 @@ export namespace Config {
     let _navigation: string;
     let _width: number;
     let _height: number;
-    let _obstacleChar: string;
+    let _obstacle: any;
     let _startNode: Node;
     let _goalNode: Node;
 
@@ -48,13 +48,13 @@ export namespace Config {
     /**
      * Get/set the character used to represent obstacles on the grid
      * @param newObstacleChar
-     * @returns {string}
+     * @returns {any}
      */
-    export function obstacleChar(newObstacleChar?: string): string {
-        if (newObstacleChar) {
-            _obstacleChar = newObstacleChar;
+    export function obstacle(newObstacle?: string): any {
+        if (newObstacle) {
+            _obstacle = newObstacle;
         }
-        return _obstacleChar;
+        return _obstacle;
     }
 
     /**

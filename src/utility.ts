@@ -1,11 +1,11 @@
 import { Config } from "./config";
 import { Node } from "./node";
 
-function getEuclideanNeighbors() {
+export function getEuclideanNeighbors() {
 
 }
 
-function getDiagonalNeighbors(grid: Map<Node, string>, x: number, y: number): Set<Node> {
+export function getDiagonalNeighbors(grid: Map<Node, string>, x: number, y: number): Set<Node> {
     const width: number = Config.width();
     const height: number = Config.height();
     let neighbors: Set<Node> = new Set<Node>(getManhattanNeighbors(grid, x, y));
@@ -45,7 +45,7 @@ function getDiagonalNeighbors(grid: Map<Node, string>, x: number, y: number): Se
     return neighbors;
 }
 
-function getManhattanNeighbors(grid: Map<Node, string>, x: number, y: number): Set<Node> {
+export function getManhattanNeighbors(grid: Map<Node, string>, x: number, y: number): Set<Node> {
     const width: number = Config.width();
     const height: number = Config.height();
     let neighbors: Set<Node> = new Set<Node>();
@@ -82,13 +82,13 @@ function getManhattanNeighbors(grid: Map<Node, string>, x: number, y: number): S
     return neighbors;
 }
 
-function isSameNode(lhs: Node, rhs: Node): boolean {
+export function isSameNode<T extends Node>(lhs: T, rhs:T): boolean {
     return lhs.x === rhs.x
         && lhs.y === rhs.y;
 }
 
-function reconstructPath(cameFrom: Map<Node, Node>, current: Node): Set<Node> {
-    let path: Set<Node> = new Set<Node>();
+export function reconstructPath<T extends Node>(cameFrom: Map<T, T>, current: T): Set<T> {
+    let path: Set<T> = new Set<T>();
     do {
         path.add(current);
         current = cameFrom.get(current);
@@ -98,11 +98,11 @@ function reconstructPath(cameFrom: Map<Node, Node>, current: Node): Set<Node> {
     return path;
 }
 
-function isStartNode(curr: Node): boolean {
+export function isStartNode<T extends Node> (curr: T): boolean {
     return isSameNode(curr, Config.startNode());
 }
 
-function distanceBetween(current: Node, neighbor: Node){
+export function distanceBetween(current: Node, neighbor: Node){
     let distance: number;
     let cX = current.x;
     let cY = current.y;
@@ -116,14 +116,18 @@ function distanceBetween(current: Node, neighbor: Node){
     return distance;
 }
 
-function getManhattanHeuristic(curr: Node, neighbor: Node) {
-    const dx = Math.abs(curr.x - neighbor.x);
-
+export function canMoveToNode<T extends Node, V>(grid: Map<T, V>, nodeToCheck: T): boolean {
+    let keys = grid.keys();
+    let key = keys.next();
+    let found = false;
+    
+    while(key.done !== true) {
+        if(isSameNode<T>(key.value, nodeToCheck)){
+            found = true;
+            break;
+        }
+        key = keys.next();
+    }
+    return grid.get(key.value) !== Config.obstacle();
 }
 
-function canMoveToNode(grid: Map<Node, string>, nodeToCheck: Node) {
-    return grid.get(nodeToCheck) !== Config.obstacleChar();
-}
-
-export {getManhattanNeighbors as getManhattanNeighbors, isSameNode as isSameNode, reconstructPath as reconstructPath,
-    distanceBetween as distanceBetween};
