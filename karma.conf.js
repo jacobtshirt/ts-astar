@@ -19,7 +19,6 @@ module.exports = function(config) {
         karmaTypescriptConfig: {
             reports:
             {
-                "html": "coverage",
                 "text-summary": "" // destination "" will redirect output to the console
             },
             compilerOptions: {
@@ -31,15 +30,6 @@ module.exports = function(config) {
           }
         },
         
-
-        // Uncomment below if you want to disable code coverage
-        // instrumentation during debugging of tests
-        /*
-        karmaTypescriptConfig: {
-            disableCodeCoverageInstrumentation: true
-        },
-        //*/
-
-        browsers: ["Chrome"]
+        browsers: ["Firefox"]
     });
 };
