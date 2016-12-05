@@ -2,13 +2,13 @@ import { Config } from "./config";
 import { Node } from "./node";
 
 export function getEuclideanNeighbors() {
-
+    return 0;
 }
 
-export function getDiagonalNeighbors(grid: Map<Node, string>, x: number, y: number): Set<Node> {
+export function getDiagonalNeighbors<T extends Node, V>(grid: Map<T, V>, x: number, y: number): Set<T|Node> {
     const width: number = Config.width();
     const height: number = Config.height();
-    let neighbors: Set<Node> = new Set<Node>(getManhattanNeighbors(grid, x, y));
+    let neighbors: Set<T|Node> = new Set(getManhattanNeighbors<T, V>(grid, x, y));
 
     // Check northwest neighbor
     if (x - 1 >= 0 && y + 1 < height) {
@@ -45,10 +45,10 @@ export function getDiagonalNeighbors(grid: Map<Node, string>, x: number, y: numb
     return neighbors;
 }
 
-export function getManhattanNeighbors(grid: Map<Node, string>, x: number, y: number): Set<Node> {
+export function getManhattanNeighbors<T extends Node, V>(grid: Map<T, V>, x: number, y: number): Set<T|Node> {
     const width: number = Config.width();
     const height: number = Config.height();
-    let neighbors: Set<Node> = new Set<Node>();
+    let neighbors: Set<T|Node> = new Set();
 
     // Check west neighbor
     if (x - 1 >= 0) {
@@ -82,7 +82,7 @@ export function getManhattanNeighbors(grid: Map<Node, string>, x: number, y: num
     return neighbors;
 }
 
-export function isSameNode<T extends Node>(lhs: T, rhs:T): boolean {
+export function isSameNode<T extends Node>(lhs: T, rhs: T): boolean {
     return lhs.x === rhs.x
         && lhs.y === rhs.y;
 }
@@ -102,7 +102,7 @@ export function isStartNode<T extends Node> (curr: T): boolean {
     return isSameNode(curr, Config.startNode());
 }
 
-export function distanceBetween(current: Node, neighbor: Node){
+export function distanceBetween<T extends Node>(current: T, neighbor: T): number {
     let distance: number;
     let cX = current.x;
     let cY = current.y;
@@ -121,8 +121,8 @@ export function canMoveToNode<T extends Node, V>(grid: Map<T, V>, nodeToCheck: T
     let key = keys.next();
     let found = false;
     
-    while(key.done !== true) {
-        if(isSameNode<T>(key.value, nodeToCheck)){
+    while (key.done !== true) {
+        if (isSameNode<T>(key.value, nodeToCheck)) {
             found = true;
             break;
         }
