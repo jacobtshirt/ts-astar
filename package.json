@@ -1,7 +1,7 @@
 {
   "name": "ts-astar",
-  "version": "1.0.0",
-  "description": "A* Pathpathing with Typescript",
+  "version": "0.0.3",
+  "description": "A* Pathfind with Typescript",
   "main": "index.js",
   "scripts": {
     "test": "karma start karma.conf.js --single-run"

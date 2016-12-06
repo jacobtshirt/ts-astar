@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/jacobtshirt/ts-astar.svg?branch=master)](https://travis-ci.org/jacobtshirt/ts-astar)
 # ts-astar
 
-## A* Pathpathing with Typescript
+## A* Pathfinding with Typescript
 
 ### Supports generics. Use YOUR object types and classes
 
