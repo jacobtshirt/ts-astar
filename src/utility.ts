@@ -56,39 +56,34 @@ export function getDiagonalNeighbors<T extends Node, V>(grid: Map<T, V>, x: numb
     return neighbors;
 }
 
-export function getManhattanNeighbors<T extends Node, V>(grid: Map<T, V>, x: number, y: number): Set<T|Node> {
+export function getManhattanNeighbors<T extends Node, V>(grid: Map<T|Node, V>, x: number, y: number): Set<T|Node> {
     const width: number = Config.width();
     const height: number = Config.height();
+    let node: Node;
     let neighbors: Set<T|Node> = new Set();
 
     // Check west neighbor
-    if (x - 1 >= 0) {
-        let node = new Node(x - 1, y);
-        if (canMoveToNode(grid, node)) {
-            neighbors.add(node);
-        }
+    
+     node = new Node(x - 1, y);
+    if (canMoveToNode(grid, node)) {
+        neighbors.add(node);
     }
     // Check east neighbor
-    if (x + 1 < width) {
-        let node = new Node(x + 1, y);
-        if (canMoveToNode(grid, node)) {
-            neighbors.add(node);
-        }
+    node = new Node(x + 1, y);
+    if (canMoveToNode(grid, node)) {
+        neighbors.add(node);
     }
     // Check south neighbor
-    if (y - 1 >= 0) {
-        let node = new Node(x, y - 1);
-        if (canMoveToNode(grid, node)) {
-            neighbors.add(node);
-        }
+    node = new Node(x, y - 1);
+    if (canMoveToNode(grid, node)) {
+        neighbors.add(node);
     }
     // Check north neighbor
-    if (y + 1 < height) {
-        let node = new Node(x, y + 1);
-        if (canMoveToNode(grid, node)) {
-            neighbors.add(node);
-        }
+    node = new Node(x, y + 1);
+    if (canMoveToNode(grid, node)) {
+        neighbors.add(node);
     }
+   
 
     return neighbors;
 }
