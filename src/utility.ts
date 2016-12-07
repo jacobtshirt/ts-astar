@@ -122,13 +122,13 @@ export function distanceBetween<T extends Node>(current: T, neighbor: T): number
     return distance;
 }
 
-export function canMoveToNode<T extends Node, V>(grid: Map<T, V>, nodeToCheck: T): boolean {
+export function canMoveToNode<T extends Node, V>(grid: Map<T|Node, V>, nodeToCheck: T): boolean {
     let keys = grid.keys();
     let key = keys.next();
     let found = false;
     
-    while (key.done !== true) {
-        if (isSameNode<T>(key.value, nodeToCheck)) {
+    while (!key.done) {
+        if (isSameNode<T|Node>(key.value, nodeToCheck)) {
             found = true;
             break;
         }
