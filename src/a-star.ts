@@ -25,13 +25,17 @@ export function astar<T extends Node, V>(start: T, goal: T, grid?: Map<T, V> | E
 function searchGrid<T extends Node, V>(start: T, goal: T, grid: Map<T, V> ): Array<T> {
     let path: Array<T>;
     let cameFrom: Map<T, T> = Map<T, T>();
-    //let curr = start;
+
+    const getNeighbors = Config.navigation() === 'Diagonal'
+                            ? getDiagonalNeighbors(grid) 
+                            : getManhattanNeighbors(grid);
 
     let openSet: OrderedMap<T, number> = OrderedMap<T, number>();
     let closedSet:  Set<T> = new Set();
-    let costSoFar: Map<T|Node, number> = Map<T|Node, number>();
+    let costSoFar: Map<T, number> = Map<T, number>();
     openSet = openSet.set(start, 0);
     costSoFar = costSoFar.set(start, 0);
+
     while(!openSet.isEmpty()) {
         const currentValue = openSet.min();
         const currentKey = openSet.keyOf(currentValue);
