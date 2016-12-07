@@ -3,16 +3,16 @@ import { Config } from "./config";
 import { EdgeList } from "./custom-types";
 import { Edge } from "./edge";
 import { Node } from "./node";
-import { OrderedMap } from 'immutable';
+import { OrderedMap, Map } from 'immutable';
 
 
 describe("astar Function", () => {
-    let grid: Map<Node, string>;
+    let grid: Map<Node, string> = Map<Node, string>();
     beforeAll(() => {
-        grid = new Map();
+
         for(let i = 0; i < 10; i++){
             for(let j = 0; j < 10; j++){
-                grid.set(new Node(i, j), ' ')
+                grid = grid.set(new Node(i, j), ' ');
             }
         }
     })

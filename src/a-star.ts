@@ -4,44 +4,41 @@ import { Edge } from "./edge";
 import { getManhattanHeuristic } from "./heuristics"
 import { Node } from "./node";
 import { isSameNode, reconstructPath, getDiagonalNeighbors, getManhattanNeighbors, distanceBetween } from "./utility";
-import { OrderedMap, OrderedSet } from 'immutable';
+import { OrderedMap, OrderedSet, Map } from 'immutable';
 
 
-export function astar<T extends Node, V>(start: T, goal: T, grid?: Map<T, V> | EdgeList<T>, navigation: string = 'Manhattan'): Set<T> {
-    let path: Set<T>;
+export function astar<T extends Node, V>(start: T, goal: T, grid?: Map<T, V> | EdgeList<T>, navigation: string = 'Manhattan') {
+    let path: Array<T> = new Array<T>();
 
     Config.navigation(navigation);
     Config.goalNode(goal);
     Config.startNode(start);
 
-    if(grid instanceof Map) {
+    if(grid instanceof Map && !(grid instanceof Array)) {
         path = searchGrid<T, V>(start, goal, grid);
-    } else if(grid instanceof Array) {
+    } else if(grid instanceof Array && !(grid instanceof Map)) {
         path = searchGraph<T, V>(start, goal, grid);
     }
-
-    console.log(path);
     return path;
 }
 
-function searchGrid<T extends Node, V>(start: T, goal: T, grid: Map<T, V> ): Set<T> {
-    let path: Set<T>;
-    let cameFrom: Map<T|Node, T|Node> = new Map();
+function searchGrid<T extends Node, V>(start: T, goal: T, grid: Map<T, V> ): Array<T> {
+    let path: Array<T>;
+    let cameFrom: Map<T, T> = Map<T, T>();
     //let curr = start;
 
-    let openSet: OrderedMap<T|Node, number> = OrderedMap<T|Node, number>();
-    let closedSet:  Set<T|Node> = new Set();
-    let costSoFar: Map<T|Node, number> = new Map();
+    let openSet: OrderedMap<T, number> = OrderedMap<T, number>();
+    let closedSet:  Set<T> = new Set();
+    let costSoFar: Map<T|Node, number> = Map<T|Node, number>();
     openSet = openSet.set(start, 0);
-    costSoFar.set(start, 0);
+    costSoFar = costSoFar.set(start, 0);
     while(!openSet.isEmpty()) {
-        let currentValue = openSet.min();
-        let currentKey = openSet.keyOf(currentValue);
+        const currentValue = openSet.min();
+        const currentKey = openSet.keyOf(currentValue);
         openSet = openSet.delete(currentKey);
         closedSet.add(currentKey);
         if(isSameNode(currentKey, goal)){
-            path = reconstructPath<T|Node>(cameFrom, currentKey) as Set<T>;
-            console.log('reconstructing', path);
+            path = reconstructPath<T>(cameFrom, currentKey);
             break;
         }
 
@@ -65,7 +62,7 @@ function searchGrid<T extends Node, V>(start: T, goal: T, grid: Map<T, V> ): Set
             if(inClosedSet) continue;
 
             let neighborFound = false;
-            const costKeys = costSoFar.keys();
+            let costKeys = costSoFar.keys();
             let costKey = costKeys.next();
             let currCost = 0;
             let currFound = false;
@@ -84,10 +81,10 @@ function searchGrid<T extends Node, V>(start: T, goal: T, grid: Map<T, V> ): Set
             
             const tempCost = currCost + distanceBetween(currentKey, neighbor);
             if(!neighborFound || tempCost < neighborCost) {
-                costSoFar.set(neighbor, tempCost)
                 const priority = tempCost + getManhattanHeuristic(currentKey, neighbor);
+                costSoFar = costSoFar.set(neighbor, tempCost);
                 openSet = openSet.set(neighbor, priority);
-                cameFrom.set(neighbor, currentKey);
+                cameFrom = cameFrom.set(neighbor, currentKey);
             }
         }
     
@@ -98,8 +95,8 @@ function searchGrid<T extends Node, V>(start: T, goal: T, grid: Map<T, V> ): Set
 
 }
 
-function searchGraph<T extends Node, V>(start: T, goal: T, graph: EdgeList<T>): Set<T> {
-    let path: Set<T> = new Set();
+function searchGraph<T extends Node, V>(start: T, goal: T, graph: EdgeList<T>): Array<T> {
+    let path: Array<T> = new Array();
 
     return path;
 }
