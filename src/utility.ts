@@ -2,7 +2,7 @@ import { Config } from "./config";
 import { EdgeList } from "./custom-types";
 import { Edge } from "./edge";
 import { Node } from "./node";
-import { OrderedMap } from 'immutable';
+import { OrderedMap, Map } from 'immutable';
 
 
 
@@ -16,92 +16,89 @@ export function getEuclideanNeighbors<T extends Node>(edgeList: EdgeList<T>, cur
     return neighbors;
 }
 
-export function getDiagonalNeighbors<T extends Node, V>(grid: Map<T, V>, x: number, y: number): Set<T|Node> {
+export function getDiagonalNeighbors<T extends Node, V>(grid: Map<T, V>, x: number, y: number): Set<T> {
     const width: number = Config.width();
     const height: number = Config.height();
-    let neighbors: Set<T|Node> = new Set(getManhattanNeighbors<T, V>(grid, x, y));
+    let neighbors: Set<T> = new Set(getManhattanNeighbors<T, V>(grid, x, y));
+    let temp: Node, neighbor: Node;
+    const checkAndAddNeighbor = validateAndReturnNeighbor(grid);
 
     // Check northwest neighbor
-    if (x - 1 >= 0 && y + 1 < height) {
-        let node = new Node(x - 1,  y + 1);
-        if (canMoveToNode(grid, node)) {
-            neighbors.add(node);
-        }
-    }
-
+    temp = new Node(x - 1,  y + 1);
+    neighbors = checkAndAddNeighbor(neighbors, temp);
+    
     // Check northeast neighbor
-    if (x + 1 < width && y + 1 < height) {
-        let node = new Node(x + 1,  y + 1);
-        if (canMoveToNode(grid, node)) {
-            neighbors.add(node);
-        }
-    }
+    temp = new Node(x + 1,  y + 1);
+    neighbors = checkAndAddNeighbor(neighbors, temp);
+    
 
     // Check southwest neighbor
-    if (x - 1 >= 0 && y - 1 >= 0) {
-        let node = new Node(x - 1,  y - 1);
-        if (canMoveToNode(grid, node)) {
-            neighbors.add(node);
-        }
-    }
+    temp = new Node(x - 1,  y - 1);
+    neighbors = checkAndAddNeighbor(neighbors, temp);
+    
 
     // Check southeast neighbor
-    if (x + 1 < width && y - 1 >= 0) {
-        let node = new Node(x + 1,  y - 1);
-        if (canMoveToNode(grid, node)) {
-            neighbors.add(node);
-        }
-    }
-
+    temp = new Node(x + 1,  y - 1);
+    neighbors = checkAndAddNeighbor(neighbors, temp);
+    
     return neighbors;
 }
 
-export function getManhattanNeighbors<T extends Node, V>(grid: Map<T|Node, V>, x: number, y: number): Set<T|Node> {
+export function getManhattanNeighbors<T extends Node, V>(grid: Map<T, V>, x: number, y: number): Set<T> {
     const width: number = Config.width();
     const height: number = Config.height();
-    let node: Node;
-    let neighbors: Set<T|Node> = new Set();
+    let temp: Node;
+    let neighbor: Node;
+    let neighbors: Set<T> = new Set();
+    const checkAndAddNeighbor = validateAndReturnNeighbor(grid);
 
     // Check west neighbor
-    
-     node = new Node(x - 1, y);
-    if (canMoveToNode(grid, node)) {
-        neighbors.add(node);
-    }
+    temp = new Node(x - 1, y);
+    neighbors = checkAndAddNeighbor(neighbors, temp);
     // Check east neighbor
-    node = new Node(x + 1, y);
-    if (canMoveToNode(grid, node)) {
-        neighbors.add(node);
-    }
+    temp = new Node(x + 1, y);
+    neighbors = checkAndAddNeighbor(neighbors, temp);
     // Check south neighbor
-    node = new Node(x, y - 1);
-    if (canMoveToNode(grid, node)) {
-        neighbors.add(node);
-    }
+    temp = new Node(x, y - 1);
+    neighbors = checkAndAddNeighbor(neighbors, temp);
     // Check north neighbor
-    node = new Node(x, y + 1);
-    if (canMoveToNode(grid, node)) {
-        neighbors.add(node);
-    }
+    temp = new Node(x, y + 1);
+    neighbors = checkAndAddNeighbor(neighbors, temp);
    
 
     return neighbors;
 }
 
-export function isSameNode<T extends Node>(lhs: T, rhs: T): boolean {
+function validateAndReturnNeighbor<T extends Node, V>(grid: Map<T, V> ) {
+    const gridToValidateAgainst = grid;
+    
+    return function (neighbors: Set<T>, toCheck: Node) {
+        let neighbor = checkNode(gridToValidateAgainst, toCheck);
+        if(neighbor) return neighbors.add(neighbor);
+        else return neighbors;
+    }
+   
+}
+
+export function isSameNode<T extends Node>(lhs: T, rhs: Node): boolean {
     return lhs.x === rhs.x
         && lhs.y === rhs.y;
 }
 
-export function reconstructPath<T extends Node>(cameFrom: Map<T, T>, current: T): Set<T> {
-    let path: Set<T> = new Set<T>();
+export function reconstructPath<T extends Node>(cameFrom: Map<T, T>, current: T): Array<T> {
+    let path: Array<T> = new Array<T>();
+    console.log(cameFrom.get(current));
     do {
-        path.add(current);
+       
+       
+        path.push(current);
+        console.log('path' , path)
         current = cameFrom.get(current);
+        console.log('came from-> ', current)
     }
     while (!isStartNode(current));
-
-    return path;
+   
+    return path.reverse();
 }
 
 export function isStartNode<T extends Node> (curr: T): boolean {
@@ -122,18 +119,22 @@ export function distanceBetween<T extends Node>(current: T, neighbor: T): number
     return distance;
 }
 
-export function canMoveToNode<T extends Node, V>(grid: Map<T|Node, V>, nodeToCheck: T): boolean {
+export function checkNode<T extends Node, V>(grid: Map<T, V>, nodeToCheck: Node): T {
     let keys = grid.keys();
     let key = keys.next();
     let found = false;
     
     while (!key.done) {
-        if (isSameNode<T|Node>(key.value, nodeToCheck)) {
+        if (isSameNode<T>(key.value, nodeToCheck)) {
             found = true;
             break;
         }
         key = keys.next();
     }
-    return grid.get(key.value) !== Config.obstacle();
+    const canMove =  grid.get(key.value) !== Config.obstacle();
+
+    if(found && canMove) return key.value;
+
+    return undefined;
 }
 
