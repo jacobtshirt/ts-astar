@@ -16,57 +16,59 @@ export function getEuclideanNeighbors<T extends Node>(edgeList: EdgeList<T>, cur
     return neighbors;
 }
 
-export function getDiagonalNeighbors<T extends Node, V>(grid: Map<T, V>, x: number, y: number): Set<T> {
-    const width: number = Config.width();
-    const height: number = Config.height();
-    let neighbors: Set<T> = new Set(getManhattanNeighbors<T, V>(grid, x, y));
-    let temp: Node, neighbor: Node;
-    const checkAndAddNeighbor = validateAndReturnNeighbor(grid);
+export function getDiagonalNeighbors<T extends Node, V>(grid: Map<T, V>) {
+    const gridToValidateAgainst = grid;
+   
+    return (x: number, y: number): Set<T> => {
+        const manhattanNeighbors = getManhattanNeighbors(gridToValidateAgainst);
+        let neighbors: Set<T> = new Set(manhattanNeighbors(x, y));
+        let temp: Node, neighbor: Node;
+        const checkAndAddNeighbor = validateAndReturnNeighbor(gridToValidateAgainst);
 
-    // Check northwest neighbor
-    temp = new Node(x - 1,  y + 1);
-    neighbors = checkAndAddNeighbor(neighbors, temp);
-    
-    // Check northeast neighbor
-    temp = new Node(x + 1,  y + 1);
-    neighbors = checkAndAddNeighbor(neighbors, temp);
-    
+        // Check northwest neighbor
+        temp = new Node(x - 1,  y + 1);
+        neighbors = checkAndAddNeighbor(neighbors, temp);
+        
+        // Check northeast neighbor
+        temp = new Node(x + 1,  y + 1);
+        neighbors = checkAndAddNeighbor(neighbors, temp);
+        
 
-    // Check southwest neighbor
-    temp = new Node(x - 1,  y - 1);
-    neighbors = checkAndAddNeighbor(neighbors, temp);
-    
+        // Check southwest neighbor
+        temp = new Node(x - 1,  y - 1);
+        neighbors = checkAndAddNeighbor(neighbors, temp);
+        
 
-    // Check southeast neighbor
-    temp = new Node(x + 1,  y - 1);
-    neighbors = checkAndAddNeighbor(neighbors, temp);
-    
-    return neighbors;
+        // Check southeast neighbor
+        temp = new Node(x + 1,  y - 1);
+        neighbors = checkAndAddNeighbor(neighbors, temp);
+        return neighbors; 
+    };
 }
 
-export function getManhattanNeighbors<T extends Node, V>(grid: Map<T, V>, x: number, y: number): Set<T> {
-    const width: number = Config.width();
-    const height: number = Config.height();
-    let temp: Node;
-    let neighbor: Node;
-    let neighbors: Set<T> = new Set();
-    const checkAndAddNeighbor = validateAndReturnNeighbor(grid);
+export function getManhattanNeighbors<T extends Node, V>(grid: Map<T, V>) {
+    const gridToValidateAgainst = grid;
 
-    // Check west neighbor
-    temp = new Node(x - 1, y);
-    neighbors = checkAndAddNeighbor(neighbors, temp);
-    // Check east neighbor
-    temp = new Node(x + 1, y);
-    neighbors = checkAndAddNeighbor(neighbors, temp);
-    // Check south neighbor
-    temp = new Node(x, y - 1);
-    neighbors = checkAndAddNeighbor(neighbors, temp);
-    // Check north neighbor
-    temp = new Node(x, y + 1);
-    neighbors = checkAndAddNeighbor(neighbors, temp);
-   
+    return (x: number, y: number): Set<T> => {
+        let temp: Node;
+        let neighbor: Node;
+        let neighbors: Set<T> = new Set();
+        const checkAndAddNeighbor = validateAndReturnNeighbor(gridToValidateAgainst);
 
-    return neighbors;
+        // Check west neighbor
+        temp = new Node(x - 1, y);
+        neighbors = checkAndAddNeighbor(neighbors, temp);
+        // Check east neighbor
+        temp = new Node(x + 1, y);
+        neighbors = checkAndAddNeighbor(neighbors, temp);
+        // Check south neighbor
+        temp = new Node(x, y - 1);
+        neighbors = checkAndAddNeighbor(neighbors, temp);
+        // Check north neighbor
+        temp = new Node(x, y + 1);
+        neighbors = checkAndAddNeighbor(neighbors, temp);
+        return neighbors;
+    }
 }
 
 function validateAndReturnNeighbor<T extends Node, V>(grid: Map<T, V> ) {

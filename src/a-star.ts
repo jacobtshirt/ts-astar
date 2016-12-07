@@ -46,9 +46,7 @@ function searchGrid<T extends Node, V>(start: T, goal: T, grid: Map<T, V> ): Arr
             break;
         }
 
-        const neighbors = Config.navigation() === 'Diagonal'
-                            ? getDiagonalNeighbors(grid as Map<T, V>, currentKey.x, currentKey.y) 
-                            : getManhattanNeighbors(grid as Map<T, V>, currentKey.x, currentKey.y);
+        const neighbors = getNeighbors(currentKey.x, currentKey.y);
        
         for(let neighbor of neighbors) {
             
