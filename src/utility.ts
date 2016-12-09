@@ -98,9 +98,7 @@ export function reconstructPath<T extends Node>(cameFrom: Map<T, T>, current: T)
        
        
         path.push(current);
-        console.log('path' , path)
         current = cameFrom.get(current);
-        console.log('came from-> ', current)
     }
     while (!isStartNode(current));
    
@@ -109,14 +107,9 @@ export function reconstructPath<T extends Node>(cameFrom: Map<T, T>, current: T)
 
 export function reconstructEdgePath<T>(cameFrom: Map<T, T>, start:T, current: T): Array<T> {
     let path: Array<T> = new Array<T>();
-    console.log(cameFrom.get(current));
     do {
-       
-       
         path.push(current);
-       // console.log('path' , path)
         current = cameFrom.get(current);
-       // console.log('came from-> ', current)
     }
     while (current !== start);
    
