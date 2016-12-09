@@ -1,5 +1,5 @@
 import { Node } from "./node";
-export class Edge<T extends Node> {
+export class Edge<T> {
     private _to: T;
     private _from: T;
     private _weight: number;
