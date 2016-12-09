@@ -3,17 +3,21 @@ import { EdgeList } from "./custom-types";
 import { Edge } from "./edge";
 import { Node } from "./node";
 import { OrderedMap, Map } from 'immutable';
+import * as _ from 'lodash';
 
 
 
-export function getEuclideanNeighbors<T extends Node>(edgeList: EdgeList<T>, curr: T) {
-    let neighbors: OrderedMap<number,T|Node> = OrderedMap<number,T|Node>();
-    for (let edge of edgeList) { 
-        if(isSameNode(curr, edge.from)) {
-             neighbors = neighbors.set(edge.weight, edge.to);
+export function getEuclideanNeighbors<T>(edgeList: EdgeList<T>) {
+    const edgeListToValidateAgainst = edgeList;
+    return (curr: T) => {
+        let neighbors: Map<number,T> = Map<number,T>();
+        for (let edge of edgeList) { 
+            if(_.isEqual(curr, edge.from)) {
+                neighbors = neighbors.set(edge.weight, edge.to);
+            }
         }
+        return neighbors;
     }
-    return neighbors;
 }
 
 export function getDiagonalNeighbors<T extends Node, V>(grid: Map<T, V>) {
@@ -102,6 +106,23 @@ export function reconstructPath<T extends Node>(cameFrom: Map<T, T>, current: T)
    
     return path.reverse();
 }
+
+export function reconstructEdgePath<T>(cameFrom: Map<T, T>, start:T, current: T): Array<T> {
+    let path: Array<T> = new Array<T>();
+    console.log(cameFrom.get(current));
+    do {
+       
+       
+        path.push(current);
+       // console.log('path' , path)
+        current = cameFrom.get(current);
+       // console.log('came from-> ', current)
+    }
+    while (current !== start);
+   
+    return path.reverse();
+}
+
 
 export function isStartNode<T extends Node> (curr: T): boolean {
     return isSameNode(curr, Config.startNode());

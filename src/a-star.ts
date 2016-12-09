@@ -3,8 +3,9 @@ import { EdgeList } from "./custom-types";
 import { Edge } from "./edge";
 import { getManhattanHeuristic } from "./heuristics"
 import { Node } from "./node";
-import { isSameNode, reconstructPath, getDiagonalNeighbors, getManhattanNeighbors, distanceBetween } from "./utility";
-import { OrderedMap, OrderedSet, Map } from 'immutable';
+import { isSameNode, reconstructPath, reconstructEdgePath, getDiagonalNeighbors, getManhattanNeighbors, getEuclideanNeighbors, distanceBetween } from "./utility";
+import { OrderedMap, OrderedSet, Map, Set } from 'immutable';
+import * as _ from 'lodash';
 
 
 export function astar<T extends Node, V>(start: T, goal: T, grid?: Map<T, V> | EdgeList<T>, navigation: string = 'Manhattan') {
@@ -17,12 +18,14 @@ export function astar<T extends Node, V>(start: T, goal: T, grid?: Map<T, V> | E
     if(grid instanceof Map && !(grid instanceof Array)) {
         path = searchGrid<T, V>(start, goal, grid);
     } else if(grid instanceof Array && !(grid instanceof Map)) {
+        console.log('grid',grid)
         path = searchGraph<T, V>(start, goal, grid);
     }
+    console.log(path);
     return path;
 }
 
-function searchGrid<T extends Node, V>(start: T, goal: T, grid: Map<T, V> ): Array<T> {
+function searchGrid<T extends Node, V>(start: T, goal: T, grid: Map<T, V>): Array<T> {
     let path: Array<T>;
     let cameFrom: Map<T, T> = Map<T, T>();
 
@@ -31,62 +34,33 @@ function searchGrid<T extends Node, V>(start: T, goal: T, grid: Map<T, V> ): Arr
                             : getManhattanNeighbors(grid);
 
     let openSet: OrderedMap<T, number> = OrderedMap<T, number>();
-    let closedSet:  Set<T> = new Set();
+    let closedSet:  Set<T> =  Set<T>();
     let costSoFar: Map<T, number> = Map<T, number>();
     openSet = openSet.set(start, 0);
     costSoFar = costSoFar.set(start, 0);
 
     while(!openSet.isEmpty()) {
-        const currentValue = openSet.min();
-        const currentKey = openSet.keyOf(currentValue);
-        openSet = openSet.delete(currentKey);
-        closedSet.add(currentKey);
-        if(isSameNode(currentKey, goal)){
-            path = reconstructPath<T>(cameFrom, currentKey);
+        const currentPriority = openSet.min();
+        const currentNode = openSet.keyOf(currentPriority);
+        openSet = openSet.delete(currentNode);
+        closedSet = closedSet.add(currentNode);
+        if(_.isEqual(currentNode, goal)){
+            path = reconstructPath<T>(cameFrom, currentNode);
             break;
         }
 
-        const neighbors = getNeighbors(currentKey.x, currentKey.y);
+        const neighbors = getNeighbors(currentNode.x, currentNode.y);
        
         for(let neighbor of neighbors) {
             
-            const closedKeys = closedSet.keys();
-            let closedKey = closedKeys.next();
-            let inClosedSet = false;
-            while(!closedKey.done){
-                let val = closedKey.value;
-                if(isSameNode(neighbor, val)){
-                    inClosedSet = true;
-                    break;
-                }
-                closedKey = closedKeys.next();
-            }
-            if(inClosedSet) continue;
-
-            let neighborFound = false;
-            let costKeys = costSoFar.keys();
-            let costKey = costKeys.next();
-            let currCost = 0;
-            let currFound = false;
-            let neighborCost = Infinity;
-            while(!costKey.done || (!currFound && !neighborFound)) {
-                const val = costKey.value;
-                if(isSameNode(currentKey, val)){
-                    currCost = costSoFar.get(val);
-                    currFound = true;
-                } else if(isSameNode(neighbor, val)) {
-                    neighborCost = costSoFar.get(val);
-                    neighborFound = true;
-                }
-                costKey = costKeys.next();
-            }
-            
-            const tempCost = currCost + distanceBetween(currentKey, neighbor);
-            if(!neighborFound || tempCost < neighborCost) {
-                const priority = tempCost + getManhattanHeuristic(currentKey, neighbor);
+            if(closedSet.has(neighbor)) continue;
+    
+            const tempCost = costSoFar.get(currentNode) + distanceBetween(currentNode, neighbor);
+            if(!costSoFar.has(neighbor) || tempCost < costSoFar.get(neighbor)) {
+                const priority = tempCost + getManhattanHeuristic(currentNode, neighbor);
                 costSoFar = costSoFar.set(neighbor, tempCost);
                 openSet = openSet.set(neighbor, priority);
-                cameFrom = cameFrom.set(neighbor, currentKey);
+                cameFrom = cameFrom.set(neighbor, currentNode);
             }
         }
     
@@ -97,8 +71,53 @@ function searchGrid<T extends Node, V>(start: T, goal: T, grid: Map<T, V> ): Arr
 
 }
 
-function searchGraph<T extends Node, V>(start: T, goal: T, graph: EdgeList<T>): Array<T> {
+function searchGraph<T, V>(start: T, goal: T, graph: EdgeList<T>): Array<T> {
     let path: Array<T> = new Array();
+    let cameFrom: Map<T, T> = Map<T, T>();
+    let openSet: OrderedMap<T, number> = OrderedMap<T, number>();
+    let closedSet:  Set<T> =  Set<T>();
+    let costSoFar: Map<T, number> = Map<T, number>();
+    console.log('graph',graph);
+    const getNeighbors = getEuclideanNeighbors(graph);
+    openSet = openSet.set(start, 0);
+    costSoFar = costSoFar.set(start, 0);
+
+    while(!openSet.isEmpty()){
+        const currentPriority = openSet.min();
+        const currentNode = openSet.keyOf(currentPriority);
+        openSet = openSet.delete(currentNode);
+        closedSet = closedSet.add(currentNode);
+        console.log('current', currentNode);
+        
+        if(_.isEqual(currentNode, goal)) { 
+            path = reconstructEdgePath(cameFrom, start, currentNode);
+            break;
+        }
+
+        let neighbors = getNeighbors(currentNode);
+        console.log('neighbors',neighbors.toJS());
+
+        neighbors.forEach((val: T, key: number) => {
+            console.log('neigh')
+            const neighbor = val;
+            const neighborImmediateCost = key;
+            let currCost = costSoFar.get(currentNode) || 0;
+            console.log('closedSet',closedSet)
+            if(closedSet.has(neighbor)){
+                return true;
+            }
+            const neighborTempCost = currCost + neighborImmediateCost;
+            if(!costSoFar.has(neighbor) || neighborTempCost < costSoFar.get(neighbor)){
+                console.log('hello')
+                const priority = neighborTempCost + 10; // rand in place of heuristic for now
+                costSoFar = costSoFar.set(neighbor, neighborTempCost);
+                openSet = openSet.set(neighbor, priority);
+                cameFrom = cameFrom.set(neighbor, currentNode);
+
+            }
+            
+        })
+    }
 
     return path;
 }
