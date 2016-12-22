@@ -1,56 +1,55 @@
 import {ConfigController} from "./config";
 import {Node} from "./node";
 import { OrderedMap, Map } from 'immutable';
-import {isSameNode, isStartNode } from "./utility";
+import { isStartNode } from "./utility";
 
-describe('isSameNode Function', () => {
-    it("should return true if lhs.x === rhs.x AND lhs.y === rhs.y", () => {
-        let lhs = new Node(0, 0);
-        let rhs = new Node(0, 0);
-        expect(isSameNode(lhs, rhs)).toEqual(true);
-    });
+// describe('isSameNode Function', () => {
+//     it("should return true if lhs.x === rhs.x AND lhs.y === rhs.y", () => {
+//         let lhs = new Node(0, 0);
+//         let rhs = new Node(0, 0);
+//         expect(isSameNode(lhs, rhs)).toEqual(true);
+//     });
 
-    it("should return false if lhs.x !== rhs.x AND lhs.y === rhs.y", () => {
-        let lhs = new Node(1, 0);
-        let rhs = new Node(0, 0);
-        expect(isSameNode(lhs, rhs)).toEqual(false);
-    });
+//     it("should return false if lhs.x !== rhs.x AND lhs.y === rhs.y", () => {
+//         let lhs = new Node(1, 0);
+//         let rhs = new Node(0, 0);
+//         expect(isSameNode(lhs, rhs)).toEqual(false);
+//     });
 
-    it("should return false if lhs.x === rhs.x AND lhs.y !== rhs.y", () => {
-        let lhs = new Node(0, 1);
-        let rhs = new Node(0, 0);
-        expect(isSameNode(lhs, rhs)).toEqual(false);
-    });
+//     it("should return false if lhs.x === rhs.x AND lhs.y !== rhs.y", () => {
+//         let lhs = new Node(0, 1);
+//         let rhs = new Node(0, 0);
+//         expect(isSameNode(lhs, rhs)).toEqual(false);
+//     });
 
-    it("should return false if lhs.x !== rhs.x AND lhs.y !== rhs.y", () => {
-        let lhs = new Node(0, 1);
-        let rhs = new Node(1, 0);
-        expect(isSameNode(lhs, rhs)).toEqual(false);
-    });
-});
+//     it("should return false if lhs.x !== rhs.x AND lhs.y !== rhs.y", () => {
+//         let lhs = new Node(0, 1);
+//         let rhs = new Node(1, 0);
+//         expect(isSameNode(lhs, rhs)).toEqual(false);
+//     });
+// });
 
 describe('isStartNode Function', () => {
     let startNode = new Node(0, 0);
-    ConfigController.startNode(startNode);
 
     it("should return true if curr.x === startNode.x AND curr.y === startNode.y", () => {
         let curr = new Node(0, 0);
-        expect(isStartNode(curr)).toEqual(true);
+        expect(isStartNode(startNode, curr)).toEqual(true);
     });
 
     it("should return false if curr.x !== startNode.x AND curr.y === startNode.y", () => {
         let curr = new Node(1, 0);
-        expect(isStartNode(curr)).toEqual(false);
+        expect(isStartNode(startNode, curr)).toEqual(false);
     });
 
     it("should return false if curr.x === startNode.x AND curr.y !== startNode.y", () => {
         let curr = new Node(0, 1);
-        expect(isStartNode(curr)).toEqual(false);
+        expect(isStartNode(startNode, curr)).toEqual(false);
     });
 
     it("should return false if curr.x !== startNode.x AND curr.y !== startNode.y", () => {
         let curr = new Node(1, 1);
-        expect(isStartNode(curr)).toEqual(false);
+        expect(isStartNode(startNode, curr)).toEqual(false);
     });
 });
 

@@ -86,21 +86,19 @@ function validateAndReturnNeighbor<T extends Node, V>(grid: Immutable.Map<T, V> 
    
 }
 
-export function isSameNode<T extends Node>(lhs: T, rhs: Node): boolean {
-    return lhs.x === rhs.x
-        && lhs.y === rhs.y;
-}
+// export function isSameNode<T extends Node>(lhs: T, rhs: Node): boolean {
+//     return lhs.x === rhs.x
+//         && lhs.y === rhs.y;
+// }
 
-export function reconstructPath<T extends Node>(cameFrom: Immutable.Map<T, T>, current: T): Array<T> {
+export function reconstructPath<T extends Node>(cameFrom: Immutable.Map<T, T>, start: T, current: T): Array<T> {
     let path: Array<T> = new Array<T>();
-    console.log(cameFrom.get(current));
     do {
-       
        
         path.push(current);
         current = cameFrom.get(current);
     }
-    while (!isStartNode(current));
+    while (!isStartNode(start, current));
    
     return path.reverse();
 }
@@ -117,8 +115,8 @@ export function reconstructEdgePath<T>(cameFrom: Immutable.Map<T, T>, start:T, c
 }
 
 
-export function isStartNode<T extends Node> (curr: T): boolean {
-    return isSameNode(curr, ConfigController.startNode());
+export function isStartNode<T extends Node> (start: T, curr: T): boolean {
+    return _.isEqual(start, curr);
 }
 
 export function distanceBetween<T extends Node>(current: T, neighbor: T): number {
@@ -141,15 +139,12 @@ function checkNode<T extends Node, V>(grid: Immutable.Map<T, V>, nodeToCheck: No
     let found = false;
     
     while (!key.done) {
-        if (isSameNode<T>(key.value, nodeToCheck)) {
+        if (_.isEqual(key.value, nodeToCheck)) {
             found = true;
             break;
         }
         key = keys.next();
     }
-    console.log(key.value, found)
-    console.log(ConfigController.obstacleDetectionFn())
-    
     const canMove = found ? ConfigController.obstacleDetectionFn()(key.value) : false; 
 
     if(canMove) return key.value;

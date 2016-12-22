@@ -1,9 +1,7 @@
 import { ConfigController } from "./config";
-import { EdgeList } from "./custom-types";
-import { Edge } from "./edge";
 import { getManhattanHeuristic } from "./heuristics"
 import { Node } from "./node";
-import { isSameNode, reconstructPath, reconstructEdgePath, getDiagonalNeighbors, getManhattanNeighbors, getEuclideanNeighbors, distanceBetween } from "./utility";
+import { reconstructPath, getDiagonalNeighbors, getManhattanNeighbors, getEuclideanNeighbors, distanceBetween } from "./utility";
 import * as Immutable from 'immutable';
 import * as _ from 'lodash';
 
@@ -31,14 +29,13 @@ export function astar<T extends Node, V>(searchableGrid: Map<T, V> | Immutable.M
 
     // Search
     if(grid instanceof Map && !(grid instanceof Array)) {
-        path = searchGrid<T, V>(grid);
+        path = searchGrid<T, V>(grid, config.startNode, config.goalNode);
     }
     return path;
 }
 
-function searchGrid<T extends Node, V>(grid: Immutable.Map<T, V>): Array<T> {
-    // Get starting node off config
-    const start = ConfigController.startNode();
+function searchGrid<T extends Node, V>(grid: Immutable.Map<T, V>, start: T, goal: T): Array<T> {
+    
     
     // Define path that evenutally gets returned by searchGrid.
     // standard ES6 Array.
@@ -80,8 +77,8 @@ function searchGrid<T extends Node, V>(grid: Immutable.Map<T, V>): Array<T> {
         closedSet = closedSet.add(currentNode);
 
         // Goal check
-        if(_.isEqual(currentNode, ConfigController.goalNode())){
-            path = reconstructPath<T>(cameFrom, currentNode);
+        if(_.isEqual(currentNode, goal)){
+            path = reconstructPath<T>(cameFrom, start, currentNode);
             break;
         }
 
