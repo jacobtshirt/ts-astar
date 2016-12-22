@@ -38,12 +38,5 @@ describe("astar Function", () => {
                                     .toBeDefined();
     });
 
-    it("should return set if array is given", () => {
-       
-        
-        // expect(astar<Node, Edge<Node>>(new Node(0, 0),
-        //     new Node(3, 4), arr))
-        //     .toBeDefined();
-    });
 })
 
