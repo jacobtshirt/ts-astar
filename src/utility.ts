@@ -1,5 +1,4 @@
 import { ConfigController } from "./config";
-import { EdgeList } from "./custom-types";
 import { Edge } from "./edge";
 import { Node } from "./node";
 import * as Immutable from 'immutable';
@@ -85,11 +84,6 @@ function validateAndReturnNeighbor<T extends Node, V>(grid: Immutable.Map<T, V> 
     }
    
 }
-
-// export function isSameNode<T extends Node>(lhs: T, rhs: Node): boolean {
-//     return lhs.x === rhs.x
-//         && lhs.y === rhs.y;
-// }
 
 export function reconstructPath<T extends Node>(cameFrom: Immutable.Map<T, T>, start: T, current: T): Array<T> {
     let path: Array<T> = new Array<T>();
