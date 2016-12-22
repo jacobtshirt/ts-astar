@@ -19,9 +19,3 @@ const shortestPath = astar&lt;Node, string&gt;(new Node(1,2),
                                             new Node(3,4),
                                             new Map&lt;Node, string&gt;().set(new Node(1,2), ' ').set(new Node(1,1), '#').set(new Node(3,4), 'X'));
 </code>
-#### Using a graph of edges
-<code>
-const shortestPath = astar&lt;Node, Edge &lt;Node&gt;&gt;(new Node(1,2),
-                                            new Node(3,4),
-                                            new Array().concat(new Edge(new Node(1,2), new Node(1,2), 0)));
-</code>
