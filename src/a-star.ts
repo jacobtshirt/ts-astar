@@ -30,7 +30,7 @@ export function astar<T extends Node, V>(searchableGrid: Map<T, V> | Immutable.M
     return path;
 }
 
-function searchGrid<T extends Node, V>(grid: Map<T, V>): Array<T> {
+function searchGrid<T extends Node, V>(grid: Immutable.Map<T, V>): Array<T> {
     let path: Array<T>;
     let cameFrom: Immutable.Map<T, T> = Immutable.Map<T, T>();
     let getNeighborsFn: Function;
@@ -38,7 +38,7 @@ function searchGrid<T extends Node, V>(grid: Map<T, V>): Array<T> {
     
 
     let openSet: Immutable.OrderedMap<T, number> = Immutable.OrderedMap<T, number>();
-    let closedSet: Immutable.Set<T> =  Immutable.Set<T>();
+    let closedSet: Immutable.Set<T> = Immutable.Set<T>();
     let costSoFar: Immutable.Map<T, number> = Immutable.Map<T, number>();
     let start = ConfigController.startNode();
     openSet = openSet.set(start, 0);
