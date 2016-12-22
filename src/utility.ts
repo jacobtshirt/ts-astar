@@ -1,4 +1,4 @@
-import { Config } from "./config";
+import { ConfigController } from "./config";
 import { EdgeList } from "./custom-types";
 import { Edge } from "./edge";
 import { Node } from "./node";
@@ -7,15 +7,15 @@ import * as _ from 'lodash';
 
 
 
-export function getEuclideanNeighbors<T>(edgeList: EdgeList<T>) {
-    const edgeListToValidateAgainst = edgeList;
+export function getEuclideanNeighbors<T extends Node, V>(grid: Map<T, V>) {
+   
     return (curr: T) => {
         let neighbors: Map<number,T> = Map<number,T>();
-        for (let edge of edgeList) { 
-            if(_.isEqual(curr, edge.from)) {
-                neighbors = neighbors.set(edge.weight, edge.to);
-            }
-        }
+        // for (let edge of edgeList) { 
+        //     if(_.isEqual(curr, edge.from)) {
+        //         neighbors = neighbors.set(edge.weight, edge.to);
+        //     }
+        // }
         return neighbors;
     }
 }
@@ -118,7 +118,7 @@ export function reconstructEdgePath<T>(cameFrom: Map<T, T>, start:T, current: T)
 
 
 export function isStartNode<T extends Node> (curr: T): boolean {
-    return isSameNode(curr, Config.startNode());
+    return isSameNode(curr, ConfigController.startNode());
 }
 
 export function distanceBetween<T extends Node>(current: T, neighbor: T): number {
@@ -135,7 +135,7 @@ export function distanceBetween<T extends Node>(current: T, neighbor: T): number
     return distance;
 }
 
-export function checkNode<T extends Node, V>(grid: Map<T, V>, nodeToCheck: Node): T {
+function checkNode<T extends Node, V>(grid: Map<T, V>, nodeToCheck: Node): T {
     let keys = grid.keys();
     let key = keys.next();
     let found = false;
@@ -147,9 +147,12 @@ export function checkNode<T extends Node, V>(grid: Map<T, V>, nodeToCheck: Node)
         }
         key = keys.next();
     }
-    const canMove =  grid.get(key.value) !== Config.obstacle();
+    console.log(key.value, found)
+    console.log(ConfigController.obstacleDetectionFn())
+    
+    const canMove = found ? ConfigController.obstacleDetectionFn()(key.value) : false; 
 
-    if(found && canMove) return key.value;
+    if(canMove) return key.value;
 
     return undefined;
 }

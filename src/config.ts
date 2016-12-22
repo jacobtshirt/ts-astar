@@ -1,12 +1,12 @@
 import { Node } from "./node";
 
-export namespace Config {
+export namespace ConfigController{
     let _navigation: string;
     let _width: number;
     let _height: number;
-    let _obstacle: any;
-    let _startNode: Node;
-    let _goalNode: Node;
+    let _obstacleDetectionFn: Function;
+    let _startNode: any;
+    let _goalNode: any;
 
     /**
      * Get/Set the navigation style (allowed directional movement)
@@ -50,11 +50,11 @@ export namespace Config {
      * @param newObstacleChar
      * @returns {any}
      */
-    export function obstacle(newObstacle?: string): any {
-        if (newObstacle) {
-            _obstacle = newObstacle;
+    export function obstacleDetectionFn(newObstacleDetectionFN?: Function): Function {
+        if (newObstacleDetectionFN) {
+            _obstacleDetectionFn = newObstacleDetectionFN;
         }
-        return _obstacle;
+        return _obstacleDetectionFn;
     }
 
     /**
@@ -62,7 +62,7 @@ export namespace Config {
      * @param newStartNode
      * @returns {Node}
      */
-    export function startNode(newStartNode?: Node): Node {
+    export function startNode(newStartNode?: any): any {
         if (newStartNode) {
             _startNode = newStartNode;
         }
@@ -74,7 +74,7 @@ export namespace Config {
      * @param newGoalNode
      * @returns {Node}
      */
-    export function goalNode(newGoalNode?: Node): Node {
+    export function goalNode(newGoalNode?: any): any {
         if (newGoalNode) {
             _goalNode = newGoalNode;
         }
