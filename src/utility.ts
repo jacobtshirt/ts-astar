@@ -2,15 +2,15 @@ import { ConfigController } from "./config";
 import { EdgeList } from "./custom-types";
 import { Edge } from "./edge";
 import { Node } from "./node";
-import { OrderedMap, Map } from 'immutable';
+import * as Immutable from 'immutable';
 import * as _ from 'lodash';
 
 
 
-export function getEuclideanNeighbors<T extends Node, V>(grid: Map<T, V>) {
+export function getEuclideanNeighbors<T extends Node, V>(grid: Immutable.Map<T, V>) {
    
     return (curr: T) => {
-        let neighbors: Map<number,T> = Map<number,T>();
+        let neighbors: Immutable.Map<number,T> = Immutable.Map<number,T>();
         // for (let edge of edgeList) { 
         //     if(_.isEqual(curr, edge.from)) {
         //         neighbors = neighbors.set(edge.weight, edge.to);
@@ -20,7 +20,7 @@ export function getEuclideanNeighbors<T extends Node, V>(grid: Map<T, V>) {
     }
 }
 
-export function getDiagonalNeighbors<T extends Node, V>(grid: Map<T, V>) {
+export function getDiagonalNeighbors<T extends Node, V>(grid: Immutable.Map<T, V>) {
     const gridToValidateAgainst = grid;
    
     return (x: number, y: number): Set<T> => {
@@ -50,7 +50,7 @@ export function getDiagonalNeighbors<T extends Node, V>(grid: Map<T, V>) {
     };
 }
 
-export function getManhattanNeighbors<T extends Node, V>(grid: Map<T, V>) {
+export function getManhattanNeighbors<T extends Node, V>(grid: Immutable.Map<T, V>) {
     const gridToValidateAgainst = grid;
 
     return (x: number, y: number): Set<T> => {
@@ -75,7 +75,7 @@ export function getManhattanNeighbors<T extends Node, V>(grid: Map<T, V>) {
     }
 }
 
-function validateAndReturnNeighbor<T extends Node, V>(grid: Map<T, V> ) {
+function validateAndReturnNeighbor<T extends Node, V>(grid: Immutable.Map<T, V> ) {
     const gridToValidateAgainst = grid;
     
     return function (neighbors: Set<T>, toCheck: Node) {
@@ -91,7 +91,7 @@ export function isSameNode<T extends Node>(lhs: T, rhs: Node): boolean {
         && lhs.y === rhs.y;
 }
 
-export function reconstructPath<T extends Node>(cameFrom: Map<T, T>, current: T): Array<T> {
+export function reconstructPath<T extends Node>(cameFrom: Immutable.Map<T, T>, current: T): Array<T> {
     let path: Array<T> = new Array<T>();
     console.log(cameFrom.get(current));
     do {
@@ -105,7 +105,7 @@ export function reconstructPath<T extends Node>(cameFrom: Map<T, T>, current: T)
     return path.reverse();
 }
 
-export function reconstructEdgePath<T>(cameFrom: Map<T, T>, start:T, current: T): Array<T> {
+export function reconstructEdgePath<T>(cameFrom: Immutable.Map<T, T>, start:T, current: T): Array<T> {
     let path: Array<T> = new Array<T>();
     do {
         path.push(current);
@@ -135,7 +135,7 @@ export function distanceBetween<T extends Node>(current: T, neighbor: T): number
     return distance;
 }
 
-function checkNode<T extends Node, V>(grid: Map<T, V>, nodeToCheck: Node): T {
+function checkNode<T extends Node, V>(grid: Immutable.Map<T, V>, nodeToCheck: Node): T {
     let keys = grid.keys();
     let key = keys.next();
     let found = false;
