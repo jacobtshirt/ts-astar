@@ -3,7 +3,25 @@ import { Node } from "./node";
 const cardinalMoveCost = 1;
 const interCardinalMoveCost = Math.SQRT2;
 
-export function getManhattanHeuristic<T extends Node>(goal: T) {
+export function heuristics<T extends Node>(goal: T, navigation: string) {
+    const goalNode = goal;
+    let fn: Function;
+    switch(navigation) {
+        case 'DIAGONAL':
+            fn = getDiagonalHeuristic(goal);
+            break;
+        case 'EUCLIDEAN':
+            fn = getEuclideanHeuristic(goal);
+            break;
+        case 'MANHATTAN':
+        default:
+            fn = getManhattanHeuristic(goal);
+            break;
+    }
+    return fn;
+}
+
+ function getManhattanHeuristic<T extends Node>(goal: T) {
     const goalNode = goal;
     return (curr: T) => {
         const dx = Math.abs(curr.x - goal.x);
@@ -14,7 +32,7 @@ export function getManhattanHeuristic<T extends Node>(goal: T) {
 }
 
 
-export function getDiagonalHeuristic<T extends Node>(goal: T) {
+function getDiagonalHeuristic<T extends Node>(goal: T) {
     const goalNode = goal;
     return (curr: T) => {
         const dx = Math.abs(curr.x - goal.x);
@@ -27,7 +45,7 @@ export function getDiagonalHeuristic<T extends Node>(goal: T) {
     
 }
 
-export function getEuclideanHeuristic<T extends Node>(goal: T) {
+function getEuclideanHeuristic<T extends Node>(goal: T) {
     const goalNode = goal;
     return (curr: T) => {
         const dx = Math.abs(curr.x - goal.x);

@@ -1,5 +1,5 @@
 import { ConfigController } from "./config";
-import { getManhattanHeuristic, getDiagonalHeuristic, getEuclideanHeuristic } from "./heuristics"
+import { heuristics } from "./heuristics"
 import { Node } from "./node";
 import { reconstructPath, getDiagonalNeighbors, getManhattanNeighbors, getEuclideanNeighbors, distanceBetween } from "./utility";
 import * as Immutable from 'immutable';
@@ -50,21 +50,18 @@ function searchGrid<T extends Node, V>(grid: Immutable.Map<T, V>, start: T, goal
     
     // Initialize navigation and neighbor checking
     let getNeighborsFn: Function;
-    let heuristic: Function;
     const nav = ConfigController.navigation();
+    const heuristic = heuristics(goal, nav);
     switch(nav) {
         case 'DIAGONAL':
             getNeighborsFn = getDiagonalNeighbors(grid);
-            heuristic = getDiagonalHeuristic(goal);
             break;
         case 'EUCLIDEAN':
             getNeighborsFn = getEuclideanNeighbors(grid);
-            heuristic = getEuclideanHeuristic(goal);
             break;
         case 'MANHATTAN':
         default:
             getNeighborsFn = getManhattanNeighbors(grid);
-            heuristic = getManhattanHeuristic(goal);
             break;
     }
 
