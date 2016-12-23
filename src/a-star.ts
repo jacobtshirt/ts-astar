@@ -55,7 +55,7 @@ function searchGrid<T extends Node, V>(grid: Immutable.Map<T, V>, start: T, goal
         case 'DIAGONAL':
             getNeighborsFn = getDiagonalNeighbors(grid);
             break;
-        case 'EUCLIDIAN':
+        case 'EUCLIDEAN':
             getNeighborsFn = getEuclideanNeighbors(grid);
             break;
         case 'MANHATTAN':
