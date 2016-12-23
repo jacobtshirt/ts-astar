@@ -1,5 +1,5 @@
 import { ConfigController } from "./config";
-import { getManhattanHeuristic } from "./heuristics"
+import { getManhattanHeuristic, getDiagonalHeuristic, getEuclideanHeuristic } from "./heuristics"
 import { Node } from "./node";
 import { reconstructPath, getDiagonalNeighbors, getManhattanNeighbors, getEuclideanNeighbors, distanceBetween } from "./utility";
 import * as Immutable from 'immutable';
@@ -50,17 +50,21 @@ function searchGrid<T extends Node, V>(grid: Immutable.Map<T, V>, start: T, goal
     
     // Initialize navigation and neighbor checking
     let getNeighborsFn: Function;
+    let heuristic: Function;
     const nav = ConfigController.navigation();
     switch(nav) {
         case 'DIAGONAL':
             getNeighborsFn = getDiagonalNeighbors(grid);
+            heuristic = getDiagonalHeuristic(goal);
             break;
         case 'EUCLIDEAN':
             getNeighborsFn = getEuclideanNeighbors(grid);
+            heuristic = getEuclideanHeuristic(goal);
             break;
         case 'MANHATTAN':
         default:
             getNeighborsFn = getManhattanNeighbors(grid);
+            heuristic = getManhattanHeuristic(goal);
             break;
     }
 
@@ -96,7 +100,7 @@ function searchGrid<T extends Node, V>(grid: Immutable.Map<T, V>, start: T, goal
             // if not in costSoFar or the new cost is less than what we currently know about cost to travel to the neighbor...
             if(!costSoFar.has(neighbor) || tempCost < costSoFar.get(neighbor)) {
                 // Calcuate priority (heuristic + travel cost);
-                const priority = tempCost + getManhattanHeuristic(currentNode, neighbor); // TODO: fix for diagonal and euclidean
+                const priority = tempCost + heuristic(goal); // TODO: fix for diagonal and euclidean
 
                 // Set the new, lower travel cost of the neighbor
                 costSoFar = costSoFar.set(neighbor, tempCost);
