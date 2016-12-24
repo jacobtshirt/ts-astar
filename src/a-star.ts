@@ -1,7 +1,7 @@
 import { ConfigController } from "./config";
 import { heuristics } from "./heuristics"
 import { Node } from "./node";
-import { Configuration } from './custom-types';
+import { Configuration } from './configuration';
 import { reconstructPath, getDiagonalNeighbors, getManhattanNeighbors, getEuclideanNeighbors, distanceBetween } from "./utility";
 import * as Immutable from 'immutable';
 import * as _ from 'lodash';
