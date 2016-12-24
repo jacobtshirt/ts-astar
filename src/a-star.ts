@@ -1,16 +1,10 @@
 import { ConfigController } from "./config";
 import { heuristics } from "./heuristics"
 import { Node } from "./node";
+import { Configuration } from './custom-types';
 import { reconstructPath, getDiagonalNeighbors, getManhattanNeighbors, getEuclideanNeighbors, distanceBetween } from "./utility";
 import * as Immutable from 'immutable';
 import * as _ from 'lodash';
-
-type Configuration<T extends Node> = {
-    navigation?: string
-    , detectObstacle: Function
-    , startNode: T
-    , goalNode: T
-}
 
 
 export function astar<T extends Node, V>(searchableGrid: Map<T, V> | Immutable.Map<T, V>, config: Configuration<T>) {

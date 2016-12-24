@@ -1,7 +1,5 @@
 import { astar } from "./a-star";
 import { ConfigController } from "./config";
-import { EdgeList } from "./custom-types";
-import { Edge } from "./edge";
 import { Node } from "./node";
 import { OrderedMap, Map } from 'immutable';
 class SomeChildClass extends Node {
