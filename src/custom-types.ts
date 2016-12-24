@@ -1,6 +1,8 @@
-import { Edge } from "./edge";
 import { Node } from "./node";
-class V<T> extends Edge<T> { 
 
-};
-export type EdgeList<T> = Array<V<T>>;
+export interface Configuration<T extends Node> {
+    navigation?: string
+    , detectObstacle: Function
+    , startNode: T
+    , goalNode: T
+}
