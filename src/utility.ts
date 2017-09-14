@@ -1,9 +1,9 @@
-import { ConfigController } from "./config";
-import { Node } from "./node";
+import { ConfigController } from './config';
+import { Node } from './node';
 import * as Immutable from 'immutable';
 import * as _ from 'lodash';
 
-export function getDiagonalNeighbors<T extends Node, V>(grid: Immutable.Map<T, V>) {
+function getDiagonalNeighbors<T extends Node, V>(grid: Immutable.Map<T, V>) {
     const gridToValidateAgainst = grid;
    
     return (x: number, y: number): Set<T> => {
@@ -28,7 +28,7 @@ export function getDiagonalNeighbors<T extends Node, V>(grid: Immutable.Map<T, V
     };
 }
 
-export function getManhattanNeighbors<T extends Node, V>(grid: Immutable.Map<T, V>) {
+function getManhattanNeighbors<T extends Node, V>(grid: Immutable.Map<T, V>) {
     const gridToValidateAgainst = grid;
 
     return (x: number, y: number): Set<T> => {
@@ -64,18 +64,18 @@ function validateAndReturnNeighbor<T extends Node, V>(grid: Immutable.Map<T, V> 
    
 }
 
-export function reconstructPath<T extends Node>(cameFrom: Immutable.Map<T, T>, start: T, current: T): Array<T> {
+function reconstructPath<T extends Node>(cameFrom: Immutable.Map<T, T>, start: T, current: T): Array<T> {
     let path: Array<T> = new Array<T>();
     do {
         path.push(current);
         current = cameFrom.get(current);
     }
-    while (!isStartNode(start, current));
+    while (!isSameNode(start, current));
    
     return path.reverse();
 }
 
-export function reconstructEdgePath<T>(cameFrom: Immutable.Map<T, T>, start:T, current: T): Array<T> {
+function reconstructEdgePath<T>(cameFrom: Immutable.Map<T, T>, start:T, current: T): Array<T> {
     let path: Array<T> = new Array<T>();
     do {
         path.push(current);
@@ -87,11 +87,11 @@ export function reconstructEdgePath<T>(cameFrom: Immutable.Map<T, T>, start:T, c
 }
 
 
-export function isStartNode<T extends Node> (start: T, curr: T): boolean {
+function isSameNode<T extends Node> (start: T, curr: T): boolean {
     return _.isEqual(start, curr);
 }
 
-export function distanceBetween<T extends Node>(current: T, neighbor: T): number {
+function distanceBetween<T extends Node>(current: T, neighbor: T): number {
     let distance: number;
     let cX = current.x;
     let cY = current.y;
@@ -124,3 +124,12 @@ function checkNode<T extends Node, V>(grid: Immutable.Map<T, V>, nodeToCheck: No
     return undefined;
 }
 
+export {
+    getDiagonalNeighbors,
+    getManhattanNeighbors,
+    validateAndReturnNeighbor,
+    reconstructPath,
+    isSameNode,
+    distanceBetween,
+    checkNode
+};
