@@ -1,7 +1,8 @@
-import { astar } from "./a-star";
-import { ConfigController } from "./config";
-import { Node } from "./node";
+import { astar } from './a-star';
+import { ConfigController } from './config';
+import { Node } from './node';
 import { OrderedMap, Map } from 'immutable';
+
 class SomeChildClass extends Node {
     isObstacle: boolean;
     constructor(x: number, y: number, isObstacle: boolean) {
@@ -10,7 +11,7 @@ class SomeChildClass extends Node {
     }
 }
 
-describe("astar Function", () => {
+describe('astar Function', () => {
     let grid: Map<SomeChildClass, string> = Map<SomeChildClass, string>();
     beforeAll(() => {
         for (let i = 0; i < 10; i++) {
@@ -19,8 +20,9 @@ describe("astar Function", () => {
                 grid = grid.set(new SomeChildClass(i, j, isObstacle), ' ');
             }
         }
-    })
-    it("should return shortest path set if map is given", () => {
+    });
+
+    it('should return shortest path set if map is given', () => {
         let config = {
             navigation: 'MANHATTAN'
             , detectObstacle:
@@ -34,22 +36,7 @@ describe("astar Function", () => {
             .toBeDefined();
     });
 
-
-    it("should return shortest path set if map is given", () => {
-        let config = {
-            navigation: 'EUCLIDEAN'
-            , detectObstacle:
-            function (node): boolean {
-                return !node.isObstacle
-            }
-            , startNode: new SomeChildClass(0, 0, false)
-            , goalNode: new SomeChildClass(3, 4, false)
-        }
-        expect(astar<SomeChildClass, string>(grid, config))
-            .toBeDefined();
-    });
-
-    it("should return shortest path set if map is given", () => {
+    it('should return shortest path set if map is given', () => {
         let config = {
             navigation: 'DIAGONAL'
             , detectObstacle:
@@ -62,6 +49,4 @@ describe("astar Function", () => {
         expect(astar<SomeChildClass, string>(grid, config))
             .toBeDefined();
     });
-
-})
-
+});

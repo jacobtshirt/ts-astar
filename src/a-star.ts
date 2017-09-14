@@ -2,7 +2,7 @@ import { ConfigController } from "./config";
 import { heuristics } from "./heuristics"
 import { Node } from "./node";
 import { Configuration } from './configuration';
-import { reconstructPath, getDiagonalNeighbors, getManhattanNeighbors, getEuclideanNeighbors, distanceBetween } from "./utility";
+import { reconstructPath, getDiagonalNeighbors, getManhattanNeighbors, distanceBetween } from "./utility";
 import * as Immutable from 'immutable';
 import * as _ from 'lodash';
 
@@ -49,9 +49,6 @@ function searchGrid<T extends Node, V>(grid: Immutable.Map<T, V>, start: T, goal
     switch(nav) {
         case 'DIAGONAL':
             getNeighborsFn = getDiagonalNeighbors(grid);
-            break;
-        case 'EUCLIDEAN':
-            getNeighborsFn = getEuclideanNeighbors(grid);
             break;
         case 'MANHATTAN':
         default:

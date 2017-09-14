@@ -7,8 +7,9 @@
 
 const shortestPath = astar&lt;T, V&gt;(...)
 
-T - a Position or Node/Location object. Must have a 'x' and 'y' property
-V - Represents information about the location can be any object or variable type given some constraints for each type
+*T* - a Position or Node/Location object. Must have a 'x' and 'y' property
+
+*V* - Represents information about the location can be any object or variable type given some constraints for each type
 
 
 ###Example

@@ -1,23 +1,7 @@
 import { ConfigController } from "./config";
-import { Edge } from "./edge";
 import { Node } from "./node";
 import * as Immutable from 'immutable';
 import * as _ from 'lodash';
-
-
-
-export function getEuclideanNeighbors<T extends Node, V>(grid: Immutable.Map<T, V>) {
-   
-    return (curr: T) => {
-        let neighbors: Immutable.Map<number,T> = Immutable.Map<number,T>();
-        // for (let edge of edgeList) { 
-        //     if(_.isEqual(curr, edge.from)) {
-        //         neighbors = neighbors.set(edge.weight, edge.to);
-        //     }
-        // }
-        return neighbors;
-    }
-}
 
 export function getDiagonalNeighbors<T extends Node, V>(grid: Immutable.Map<T, V>) {
     const gridToValidateAgainst = grid;
@@ -31,17 +15,12 @@ export function getDiagonalNeighbors<T extends Node, V>(grid: Immutable.Map<T, V
         // Check northwest neighbor
         temp = new Node(x - 1,  y + 1);
         neighbors = checkAndAddNeighbor(neighbors, temp);
-        
         // Check northeast neighbor
         temp = new Node(x + 1,  y + 1);
         neighbors = checkAndAddNeighbor(neighbors, temp);
-        
-
         // Check southwest neighbor
         temp = new Node(x - 1,  y - 1);
         neighbors = checkAndAddNeighbor(neighbors, temp);
-        
-
         // Check southeast neighbor
         temp = new Node(x + 1,  y - 1);
         neighbors = checkAndAddNeighbor(neighbors, temp);
@@ -77,7 +56,7 @@ export function getManhattanNeighbors<T extends Node, V>(grid: Immutable.Map<T, 
 function validateAndReturnNeighbor<T extends Node, V>(grid: Immutable.Map<T, V> ) {
     const gridToValidateAgainst = grid;
     
-    return function (neighbors: Set<T>, toCheck: Node) {
+    return (neighbors: Set<T>, toCheck: Node) => {
         let neighbor = checkNode(gridToValidateAgainst, toCheck);
         if(neighbor) return neighbors.add(neighbor);
         else return neighbors;
@@ -88,7 +67,6 @@ function validateAndReturnNeighbor<T extends Node, V>(grid: Immutable.Map<T, V> 
 export function reconstructPath<T extends Node>(cameFrom: Immutable.Map<T, T>, start: T, current: T): Array<T> {
     let path: Array<T> = new Array<T>();
     do {
-       
         path.push(current);
         current = cameFrom.get(current);
     }
