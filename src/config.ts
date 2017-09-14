@@ -4,7 +4,7 @@ export namespace ConfigController{
     let _navigation: string;
     let _width: number;
     let _height: number;
-    let _obstacleDetectionFn: Function;
+    let _obstacleDetectionFn: Function = undefined;
     let _startNode: any;
     let _goalNode: any;
 

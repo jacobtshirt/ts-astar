@@ -87,38 +87,47 @@ function reconstructEdgePath<T>(cameFrom: Immutable.Map<T, T>, start:T, current:
 }
 
 
-function isSameNode<T extends Node> (start: T, curr: T): boolean {
-    return _.isEqual(start, curr);
+function isSameNode<T extends Node> (lhs: T, rhs: T): boolean {
+    return lhs.x === rhs.x && lhs.y === rhs.y;
 }
 
+/**
+ * Calculates distance using the distance formulate to calculate distance between 2 points
+ * @param current {T} point 1
+ * @param neighbor {T} point 2
+ * @returns distance
+ */
 function distanceBetween<T extends Node>(current: T, neighbor: T): number {
-    let distance: number;
-    let cX = current.x;
-    let cY = current.y;
-    let nX = neighbor.x;
-    let nY = neighbor.y;
+    const { x: cX, y: cY } = current;
+    const { x: nY, y: nX } = neighbor;
 
     let diffXSquared = (nX - cX) * (nX - cX);
     let diffYSquared = (nY - cY) * (nY - cY);
-
-    distance = Math.sqrt(diffXSquared + diffYSquared);
-    return distance;
+    
+    return Math.sqrt(diffXSquared + diffYSquared);;
 }
 
 function checkNode<T extends Node, V>(grid: Immutable.Map<T, V>, nodeToCheck: Node): T {
     let keys = grid.keys();
     let key = keys.next();
     let found = false;
+    let is = grid.includes(' ' as any as V);
     
     while (!key.done) {
-        if (_.isEqual(key.value, nodeToCheck)) {
+        if (isSameNode(key.value, nodeToCheck)) {
             found = true;
             break;
         }
         key = keys.next();
     }
-    const canMove = found ? ConfigController.obstacleDetectionFn()(key.value) : false; 
-
+    let canMove = false;
+    if(found) {
+        if(!ConfigController.obstacleDetectionFn()) {
+            canMove = true;
+        } else { 
+            canMove = ConfigController.obstacleDetectionFn()(key.value)
+        }
+    }
     if(canMove) return key.value;
 
     return undefined;
